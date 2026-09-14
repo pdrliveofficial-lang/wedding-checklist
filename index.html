@@ -71,6 +71,13 @@ li.item.done{opacity:.5;background:var(--sage-bg);border-color:transparent;box-s
 footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 footer button{font:inherit;font-size:12.5px;padding:7px 13px;border-radius:8px;cursor:pointer;background:var(--card);color:var(--ink-2);border:1px solid var(--line)}
 footer button:hover{color:var(--ink);border-color:var(--faint)}
+
+.dl{display:inline-flex;align-items:center;gap:9px;margin-top:18px;padding:12px 20px;
+    border-radius:10px;background:var(--ink);color:var(--paper);text-decoration:none;
+    font-weight:700;font-size:14.5px;border:1px solid var(--ink);transition:opacity .15s}
+.dl:hover{opacity:.86}
+.dl svg{width:17px;height:17px;flex:none}
+.dl-note{display:block;margin-top:9px;color:var(--muted);font-size:12.5px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -81,6 +88,13 @@ footer button:hover{color:var(--ink);border-color:var(--faint)}
   <p class="kicker">@serendi_pity_ 무료 배포</p>
   <h1>결혼준비 12개월 체크리스트</h1>
   <p class="lede">D-12개월부터 식 끝난 2주 뒤까지. 체크한 건 저장되니까 천천히 해도 돼.</p>
+  <a class="dl" href="wedding-checklist.pdf" download>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5"/><path d="M4 19h16"/></svg>
+    PDF로 받기
+  </a>
+  <span class="dl-note">인쇄해서 손으로 체크해도 되고, 아래에서 바로 눌러도 됩니다.</span>
 </header>
 
 <div class="bar">
