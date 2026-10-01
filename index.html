@@ -108,7 +108,64 @@ a.pdf:hover{color:var(--ink)}
 .cta h2{margin:0 0 6px;font-size:19px}
 .cta p{margin:0;color:var(--ink-2);font-size:14.5px}
 .cta a{color:var(--sage);font-weight:700}
+/* ── 팔로우 게이트 ── */
+body.locked{overflow:hidden}
+body.locked .wrap{filter:blur(7px);pointer-events:none;user-select:none}
+.gate{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
+  padding:20px;background:color-mix(in srgb,var(--paper) 78%,transparent);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);overflow-y:auto}
+.gate[hidden]{display:none}
+.gate-box{background:var(--card);border:1px solid var(--line);border-radius:16px;
+  box-shadow:0 20px 60px -20px rgba(0,0,0,.4);padding:28px 24px;max-width:400px;width:100%;
+  margin:auto}
+.gate-k{margin:0 0 8px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--wine);font-weight:700}
+.gate-box h2{font-family:"Gowun Batang",serif;font-size:23px;line-height:1.35;
+  margin:0 0 12px;letter-spacing:-.01em}
+.gate-p{margin:0 0 18px;color:var(--ink-2);font-size:14.5px}
+.gate-steps{margin:0 0 20px;padding-left:19px;color:var(--ink-2);font-size:14px}
+.gate-steps li{margin-bottom:7px}
+.gate-steps b{color:var(--ink)}
+.gate-go{display:block;text-align:center;padding:14px 18px;border-radius:10px;
+  background:var(--ink);color:var(--paper);text-decoration:none;font-weight:700;font-size:15px}
+.gate-go:hover{opacity:.88}
+.gate-form{display:flex;gap:8px;margin-top:12px}
+.gate-form input{flex:1;min-width:0;font:inherit;font-size:15px;padding:12px 14px;
+  border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+.gate-form input:focus{outline:2px solid var(--sage);outline-offset:1px;border-color:transparent}
+.gate-form button{font:inherit;font-weight:700;font-size:14.5px;padding:12px 18px;
+  border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);
+  cursor:pointer;white-space:nowrap}
+.gate-form button:hover{border-color:var(--faint)}
+.gate-err{margin:10px 0 0;color:var(--wine);font-size:13.5px;font-weight:700}
+.gate-err[hidden]{display:none}
+.gate-note{margin:16px 0 0;color:var(--muted);font-size:12.5px;line-height:1.6}
+.gate-note a{color:var(--muted)}
 </style></head><body>
+
+<div class="gate" id="gate" hidden>
+  <div class="gate-box" role="dialog" aria-modal="true" aria-labelledby="gate-h">
+    <p class="gate-k">잠깐만!</p>
+    <h2 id="gate-h">자료는 무료야.<br>대신 인스타그램 팔로우만 해줘</h2>
+    <p class="gate-p">혼자 찾아서 정리하는 거라 품이 많이 들어.
+      팔로우 한 번이면 계속 만들 힘이 나거든 🤍</p>
+    <ol class="gate-steps">
+      <li>아래 버튼으로 <b>@serendi_pity_</b> 팔로우하기</li>
+      <li><b>인스타 프로필 소개글 맨 아래</b>에 적힌 비밀번호 확인</li>
+      <li>여기 돌아와서 입력하면 끝!</li>
+    </ol>
+    <a class="gate-go" id="gate-go" href="https://www.instagram.com/serendi_pity_/" target="_blank" rel="noopener">
+      인스타그램 팔로우하러 가기 ↗</a>
+    <form class="gate-form" id="gate-form">
+      <input id="gate-in" type="text" inputmode="text" autocomplete="off"
+        placeholder="비밀번호 입력" aria-label="비밀번호">
+      <button type="submit">열기</button>
+    </form>
+    <p class="gate-err" id="gate-err" hidden>비밀번호가 달라. 인스타 프로필 소개글 맨 아래 다시 확인해줄래?</p>
+    <p class="gate-note">이미 팔로우했으면 비밀번호만 넣으면 돼.
+      못 찾겠으면 <a href="https://www.threads.com/@serendi_pity_">디엠</a> 줘 — 바로 알려줄게.</p>
+  </div>
+</div>
 
 <div class="wrap">
 <header>
@@ -204,5 +261,40 @@ addEventListener("hashchange",openFromHash);
 openFromHash();
 
 paint();
+
+// ── 팔로우 게이트 ──
+// 정적 사이트라 소스를 보면 비밀번호가 보인다. 진짜 잠금이 아니라 문턱이다.
+const GKEY="serendi-gate-v1";
+const gate=document.getElementById("gate");
+// atob 은 Latin-1 로 풀어서 한글이 깨진다. UTF-8 로 다시 디코딩해야 한다
+const want=new TextDecoder().decode(
+  Uint8Array.from(atob("7IS466CM65SU"),c=>c.charCodeAt(0))).trim().toLowerCase();
+
+function unlock(save){
+  if(save)localStorage.setItem(GKEY,"1");
+  gate.hidden=true;
+  document.body.classList.remove("locked");
+}
+
+if(localStorage.getItem(GKEY)){
+  unlock(false);
+}else{
+  gate.hidden=false;
+  document.body.classList.add("locked");
+  // 팔로우하러 간 사람은 돌아왔을 때 입력칸에 바로 커서가 가 있게
+  document.getElementById("gate-go").addEventListener("click",()=>{
+    setTimeout(()=>document.getElementById("gate-in").focus(),400);
+  });
+  document.getElementById("gate-form").addEventListener("submit",e=>{
+    e.preventDefault();
+    const v=document.getElementById("gate-in").value.trim().toLowerCase();
+    if(v===want){unlock(true)}
+    else{
+      document.getElementById("gate-err").hidden=false;
+      document.getElementById("gate-in").select();
+    }
+  });
+}
+
 </script>
 </body></html>
