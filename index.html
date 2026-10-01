@@ -123,13 +123,24 @@ body.locked .wrap{filter:blur(7px);pointer-events:none;user-select:none}
 .gate-box h2{font-family:"Gowun Batang",serif;font-size:23px;line-height:1.35;
   margin:0 0 12px;letter-spacing:-.01em}
 .gate-p{margin:0 0 18px;color:var(--ink-2);font-size:14.5px}
-.gate-steps{margin:0 0 20px;padding-left:19px;color:var(--ink-2);font-size:14px}
-.gate-steps li{margin-bottom:7px}
-.gate-steps b{color:var(--ink)}
-.gate-go{display:block;text-align:center;padding:14px 18px;border-radius:10px;
-  background:var(--ink);color:var(--paper);text-decoration:none;font-weight:700;font-size:15px}
+.step{display:flex;gap:12px;margin-bottom:18px}
+.sn{flex:none;width:23px;height:23px;border-radius:50%;background:var(--wine);color:#fff;
+  font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  margin-top:1px}
+.sb{flex:1;min-width:0}
+.sb>b{display:block;font-size:14.5px;margin-bottom:9px}
+.gate-go{display:block;text-align:center;padding:13px 18px;border-radius:10px;
+  background:var(--ink);color:var(--paper);text-decoration:none;font-weight:700;font-size:14.5px}
+.gate-go.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .gate-go:hover{opacity:.88}
-.gate-form{display:flex;gap:8px;margin-top:12px}
+.say{display:flex;align-items:center;gap:8px;margin-bottom:9px;padding:10px 10px 10px 14px;
+  border-radius:10px;background:var(--wine-bg);
+  border:1px solid color-mix(in srgb,var(--wine) 18%,transparent)}
+.say span{flex:1;min-width:0;font-weight:700;font-size:14.5px;color:var(--ink)}
+.say button{flex:none;font:inherit;font-size:12px;font-weight:700;padding:6px 11px;
+  border-radius:7px;border:1px solid color-mix(in srgb,var(--wine) 28%,transparent);
+  background:var(--card);color:var(--wine);cursor:pointer}
+.gate-form{display:flex;gap:8px}
 .gate-form input{flex:1;min-width:0;font:inherit;font-size:15px;padding:12px 14px;
   border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
 .gate-form input:focus{outline:2px solid var(--sage);outline-offset:1px;border-color:transparent}
@@ -149,21 +160,43 @@ body.locked .wrap{filter:blur(7px);pointer-events:none;user-select:none}
     <h2 id="gate-h">자료는 무료야.<br>대신 인스타그램 팔로우만 해줘</h2>
     <p class="gate-p">혼자 찾아서 정리하는 거라 품이 많이 들어.
       팔로우 한 번이면 계속 만들 힘이 나거든 🤍</p>
-    <ol class="gate-steps">
-      <li>아래 버튼으로 <b>@serendi_pity_</b> 팔로우하기</li>
-      <li><b>인스타 프로필 소개글 맨 아래</b>에 적힌 비밀번호 확인</li>
-      <li>여기 돌아와서 입력하면 끝!</li>
-    </ol>
-    <a class="gate-go" id="gate-go" href="https://www.instagram.com/serendi_pity_/" target="_blank" rel="noopener">
-      인스타그램 팔로우하러 가기 ↗</a>
-    <form class="gate-form" id="gate-form">
-      <input id="gate-in" type="text" inputmode="text" autocomplete="off"
-        placeholder="비밀번호 입력" aria-label="비밀번호">
-      <button type="submit">열기</button>
-    </form>
-    <p class="gate-err" id="gate-err" hidden>비밀번호가 달라. 인스타 프로필 소개글 맨 아래 다시 확인해줄래?</p>
-    <p class="gate-note">이미 팔로우했으면 비밀번호만 넣으면 돼.
-      못 찾겠으면 <a href="https://www.threads.com/@serendi_pity_">디엠</a> 줘 — 바로 알려줄게.</p>
+
+    <div class="step">
+      <span class="sn">1</span>
+      <div class="sb">
+        <b>@serendi_pity_ 팔로우하기</b>
+        <a class="gate-go" href="https://www.instagram.com/serendi_pity_/" target="_blank" rel="noopener">
+          인스타그램 팔로우하러 가기 ↗</a>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="sn">2</span>
+      <div class="sb">
+        <b>디엠으로 비밀번호 물어보기</b>
+        <div class="say">
+          <span id="say-t">비밀번호 알려줘!</span>
+          <button type="button" id="say-c" aria-label="문구 복사">복사</button>
+        </div>
+        <a class="gate-go ghost" id="gate-dm" href="https://ig.me/m/serendi_pity_" target="_blank" rel="noopener">
+          디엠 보내기 ↗</a>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="sn">3</span>
+      <div class="sb">
+        <b>받은 비밀번호 입력하기</b>
+        <form class="gate-form" id="gate-form">
+          <input id="gate-in" type="text" inputmode="text" autocomplete="off"
+            placeholder="비밀번호 입력" aria-label="비밀번호">
+          <button type="submit">열기</button>
+        </form>
+        <p class="gate-err" id="gate-err" hidden>비밀번호가 다른 것 같아. 받은 그대로 넣어줄래?</p>
+      </div>
+    </div>
+
+    <p class="gate-note">바로 답 못 할 때도 있어. 금방 보고 보내줄게 🙏</p>
   </div>
 </div>
 
@@ -282,8 +315,17 @@ if(localStorage.getItem(GKEY)){
   gate.hidden=false;
   document.body.classList.add("locked");
   // 팔로우하러 간 사람은 돌아왔을 때 입력칸에 바로 커서가 가 있게
-  document.getElementById("gate-go").addEventListener("click",()=>{
+  // 디엠 보내러 간 사람은 돌아왔을 때 입력칸에 커서가 가 있게
+  document.getElementById("gate-dm").addEventListener("click",()=>{
     setTimeout(()=>document.getElementById("gate-in").focus(),400);
+  });
+  // 보낼 문구 복사 — 폰에서 타이핑하는 것보다 한 단계 덜 귀찮다
+  document.getElementById("say-c").addEventListener("click",ev=>{
+    const t=document.getElementById("say-t").textContent;
+    navigator.clipboard?.writeText(t).then(()=>{
+      ev.target.textContent="복사됨";
+      setTimeout(()=>ev.target.textContent="복사",1400);
+    });
   });
   document.getElementById("gate-form").addEventListener("submit",e=>{
     e.preventDefault();
